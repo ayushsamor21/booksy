@@ -2,7 +2,7 @@ CREATE TABLE book_schema(
 book_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 name VARCHAR(255) NOT NULL,
 publisher_id INT NOT NULL,
-FOREIGN KEY (publisher_id) REFERENCES publisher(publisher_id),
+FOREIGN KEY (publisher_id) REFERENCES publisher_schema(publisher_id),
 description VARCHAR(255),
 audio_availability BOOLEAN NULL DEFAULT 0,
 price INT NOT NULL,
