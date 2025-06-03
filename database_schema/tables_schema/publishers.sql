@@ -1,12 +1,8 @@
-CREATE TABLE books(
+CREATE TABLE publishers(
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
-    publisher_id INT NOT NULL,
-    FOREIGN KEY (publisher_id) REFERENCES publisher(id),
+    address VARCHAR(255),
     description VARCHAR(255),
-    isAudio BOOLEAN NULL DEFAULT 0,
-    price INT NOT NULL,
-    published_date DATETIME NOT NULL,
     created_by INT,
     updated_by INT,
     created_at DATETIME,
