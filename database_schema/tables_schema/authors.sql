@@ -1,5 +1,5 @@
-CREATE TABLE authors_schema(
-    authors_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE authors(
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     description VARCHAR(255),
     email VARCHAR(255) NOT NULL,
