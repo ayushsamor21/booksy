@@ -46,21 +46,6 @@ class SampleApiHandler(BaseHTTPRequestHandler):
 
     def do_PUT(self):
         author_id = self.path.split('/')[-1]
-        for author in authors:
-            if author['id'] == int(author_id):
-                body = self._get_request_body()
-                body['id'] = author_id
-                author = body
-                self._set_headers(200)
-                self.wfile.write(json.dumps(author).encode())
-                break
-            else:
-                self._set_headers(404)
-                self.wfile.write(b'{"error": "Not found"}')
-                break
-
-    def do_PUT(self):
-        author_id = self.path.split('/')[-1]
         author_exists = False
         for author in authors:
             if author['id'] == int(author_id):
