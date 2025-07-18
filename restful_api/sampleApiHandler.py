@@ -80,7 +80,7 @@ class SampleApiHandler(BaseHTTPRequestHandler):
 def run():
     server_address = (HOST, PORT)
     httpd = HTTPServer(server_address, SampleApiHandler)
-    print(f"Starting sever on http://{HOST}:{PORT}")
+    print(f"Starting server on http://{HOST}:{PORT}")
     httpd.serve_forever()
 
 if __name__ == '__main__':
