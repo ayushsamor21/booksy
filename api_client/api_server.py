@@ -36,6 +36,11 @@ class SampleApiHandler(BaseHTTPRequestHandler):
         self.send_header('Content-Type', 'application/json')
         self.end_headers()
 
+    def _get_request_body(self):
+        content_length = int(self.headers.get('Content-Length', 0))
+        body = self.rfile.read(content_length)
+        return json.loads(body.decode('utf-8')) if body else {}
+
     def do_GET(self):
         if self.path == '/authors':
             cursor = mydb.cursor()
@@ -50,6 +55,92 @@ class SampleApiHandler(BaseHTTPRequestHandler):
         else:
             self._set_headers(400)
             self.wfile.write(json.dumps({"error": "Not found"}).encode())
+
+    def do_POST(self):
+        if self.path == '/authors':
+            cursor = mydb.cursor()
+            body = self._get_request_body()
+            cursor.execute("""
+                           INSERT INTO authors (name, description, email, created_by, updated_by, status)
+                           VALUES (%s, %s, %s, %s, %s, %s)
+                       """, (
+                body.get('name', 'Unnamed'),
+                body.get('description', 'No-description'),
+                body.get('email', 'noemail@example.com'),
+                0, 0, 'active'
+            ))
+            mydb.commit()
+            inserted_id = cursor.lastrowid
+            cursor.close()
+            mydb.close()
+
+            self._set_headers(201)
+            self.wfile.write(json.dumps({"id": inserted_id}).encode())
+        else:
+            self._set_headers(404)
+            self.wfile.write(json.dumps({"error": "Not found"}).encode())
+
+
+    def do_PUT(self):
+        path_parts = self.path.strip('/').split('/')
+        if len(path_parts) == 2 and path_parts[0] == "authors":
+            try:
+                author_id = int(path_parts[1])
+            except ValueError:
+                self._set_headers(400)
+                self.wfile.write(b'{"error": "Invalid ID"}')
+                return
+
+            body = self._get_request_body()
+            cursor = mydb.cursor()
+            cursor.execute("""
+                UPDATE authors
+                SET name=%s, description=%s, email=%s, updated_by=%s, updated_at=%s
+                WHERE id=%s
+            """, (
+            body.get('name'),
+            body.get('description'),
+            body.get('email'),
+            0,
+            datetime.now(),
+            author_id
+        ))
+
+            mydb.commit()
+            affected = cursor.rowcount
+            cursor.close()
+            mydb.close()
+
+
+            self._set_headers(200)
+            self.wfile.write(json.dumps({"message": "Author updated"}).encode())
+        else:
+            self._set_headers(404)
+            self.wfile.write(json.dumps({"error": "Author not found"}).encode())
+
+    def do_DELETE(self):
+        path_parts = self.path.strip('/').split('/')
+        if len(path_parts) == 2 and path_parts[0] == "authors":
+            try:
+                author_id = int(path_parts[1])
+            except ValueError:
+                self._set_headers(400)
+                self.wfile.write(b'{"error": "Invalid ID"}')
+                return
+
+            cursor = mydb.cursor()
+            cursor.execute("DELETE FROM authors WHERE id = %s", (author_id,))
+            mydb.commit()
+            affected = cursor.rowcount
+            cursor.close()
+            mydb.close()
+
+            if affected:
+                self._set_headers(200)
+                self.wfile.write(json.dumps({"message": "Author deleted"}).encode())
+            else:
+                self._set_headers(404)
+                self.wfile.write(json.dumps({"error": "Author not found"}).encode())
 
 
 def main():
