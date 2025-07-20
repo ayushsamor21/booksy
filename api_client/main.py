@@ -129,8 +129,6 @@ class SampleApiHandler(BaseHTTPRequestHandler):
                 self._set_headers(404)
                 self.wfile.write(json.dumps({"error": "Author not found"}).encode())
 
-
-
 def main():
     server_address = (SERVER_HOST, SERVER_PORT)
     httpd = HTTPServer(server_address, SampleApiHandler)
