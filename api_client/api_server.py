@@ -107,7 +107,6 @@ class SampleApiHandler(BaseHTTPRequestHandler):
         ))
 
             mydb.commit()
-            affected = cursor.rowcount
             cursor.close()
             mydb.close()
 
