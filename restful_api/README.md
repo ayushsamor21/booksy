@@ -36,7 +36,7 @@ A simple Python-based REST API using `http.server` running at `http://localhost:
 ### PUT request
 1. PUT method (update new resource):
     ```bash
-   curl -X PUT http://localhost:8002 \
+     curl -X PUT http://localhost:8002 \
      -H "Content-Type: application/json" \
      -d '{"name": "John", "age": 31}'
    
