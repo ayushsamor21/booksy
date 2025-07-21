@@ -11,7 +11,7 @@ class DatabaseConnector:
     def connect(self):
         db_instance = mysql.connector.connect(
             host=self.host,
-            port=self.host,
+            port=self.port,
             database = self.database,
             user=self.username,
             password=self.password
