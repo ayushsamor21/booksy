@@ -23,12 +23,15 @@ def convert_datetime(obj):
 
 class ApiHandler(BaseHTTPRequestHandler):
 
-    @staticmethod
-    def author_instance():
-        return AuthorOperation(args.host, args.port, args.database, args.username, args.password)
-
-    # def author_instance(self):
-    #     self.author = AuthorOperation(args.host, args.port, args.database, args.username, args.password)
+    def __init__(self, *handler_args, **handler_kwargs):
+        self.author = AuthorOperation(
+            args.host,
+            3306,
+            args.database,
+            args.username,
+            args.password
+        )
+        super().__init__(*handler_args, **handler_kwargs)
 
     def _set_headers(self, status = 200):
         self.send_response(status)
@@ -42,7 +45,7 @@ class ApiHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == '/authors':
-            authors = ApiHandler.author_instance().read_authors()
+            authors = self.author.read_authors()
             self._set_headers()
             self.wfile.write(json.dumps(authors, default=str).encode('utf-8'))
         else:
