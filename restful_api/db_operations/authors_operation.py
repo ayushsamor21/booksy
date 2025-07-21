@@ -19,8 +19,8 @@ class AuthorOperation(DatabaseConnector):
         db_instance = self.connect()
         cursor = db_instance.cursor()
         cursor.execute("""
-                       INSERT INTO authors (name, description, email, created_by, updated_by, created_at, updated_at status)
-                       VALUES (%s, %s, %s, %s, %s, %s)
+                       INSERT INTO authors (name, description, email, created_by, updated_by, created_at, updated_at, status)
+                       VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                    """, (name, description, email, 0, 0, datetime.now(), datetime.now(), 'active'))
         db_instance.commit()
         author_id = cursor.lastrowid()
