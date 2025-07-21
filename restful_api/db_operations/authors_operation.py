@@ -1,4 +1,4 @@
-from restful_api.db.connect import DatabaseConnector
+from .connect import DatabaseConnector
 from datetime import datetime
 
 class AuthorOperation(DatabaseConnector):
@@ -9,7 +9,7 @@ class AuthorOperation(DatabaseConnector):
     def read_authors(self):
         db_instance = self.connect()
         cursor = db_instance.cursor(dictionary=True)
-        cursor.execute('SELECT * FROM authors')
+        cursor.execute('SELECT * FROM authors LIMIT 10')
         authors = cursor.fetchall()
         cursor.close()
         db_instance.close()
