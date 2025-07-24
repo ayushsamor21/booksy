@@ -55,9 +55,16 @@ class ApiHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         if self.path == '/authors':
             body = self._get_request_body()
-            name = body.get('name', 'unknown')
-            description = body.get('description', 'No-description')
-            email = body.get('email', 'No-email')
+            name = body.get('name', '').strip(' ')
+            description = body.get('description', '')
+            email = body.get('email', '')
+
+
+            if not name:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({'error':'Please provide author name'}).encode())
+                return
+
             author_id = self.author.insert_authors(name, description, email)
             self._set_headers(201)
             self.wfile.write(json.dumps({"id": author_id}).encode())
