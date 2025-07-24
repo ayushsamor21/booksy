@@ -23,7 +23,7 @@ class AuthorOperation(DatabaseConnector):
                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                    """, (name, description, email, 0, 0, datetime.now(), datetime.now(), 'active'))
         db_instance.commit()
-        author_id = cursor.lastrowid()
+        author_id = cursor.lastrowid
         cursor.close()
         db_instance.close()
         return author_id
