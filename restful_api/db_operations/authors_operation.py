@@ -19,7 +19,6 @@ class AuthorOperation(DatabaseConnector):
         db_instance = self.connect()
         cursor = db_instance.cursor()
 
-        # Check if email already exists
         cursor.execute("SELECT COUNT(*) FROM authors WHERE email = %s", (email,))
         result = cursor.fetchone()
 
