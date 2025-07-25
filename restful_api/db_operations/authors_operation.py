@@ -18,10 +18,27 @@ class AuthorOperation(DatabaseConnector):
     def insert_authors(self, name, description, email):
         db_instance = self.connect()
         cursor = db_instance.cursor()
-        cursor.execute("""
-                       INSERT INTO authors (name, description, email, created_by, updated_by, created_at, updated_at, status)
-                       VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                   """, (name, description, email, 0, 0, datetime.now(), datetime.now(), 'active'))
+
+        # Check if email already exists
+        cursor.execute("SELECT COUNT(*) FROM authors WHERE email = %s", (email,))
+        result = cursor.fetchone()
+
+        if result[0] > 0:
+            print("Email already exists!! Error")
+            cursor.close()
+            db_instance.close()
+            return None
+
+        insert_query = """
+            INSERT INTO authors (
+                name, description, email,
+                created_by, updated_by,
+                created_at, updated_at, status
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        values = (name, description, email, 0, 0, datetime.now(), datetime.now(), 'active')
+        cursor.execute(insert_query, values)
         db_instance.commit()
         author_id = cursor.lastrowid
         cursor.close()
